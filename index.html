@@ -196,26 +196,90 @@
     }
     .chars {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-      gap: 10px;
-      margin-bottom: 14px;
+      grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
+      gap: 8px;
+      margin-bottom: 12px;
+      max-height: min(38vh, 320px);
+      overflow: auto;
+      padding: 2px 4px 8px;
     }
     .char {
       border: 3px solid transparent;
-      border-radius: 18px;
+      border-radius: 16px;
       background: linear-gradient(180deg, rgba(30,41,59,0.95), rgba(15,23,42,0.95));
-      padding: 12px 8px; cursor: pointer; text-align: center;
-      min-height: 120px;
-      box-shadow: 0 8px 0 rgba(0,0,0,0.25);
+      padding: 10px 6px; cursor: pointer; text-align: center;
+      min-height: 108px;
+      box-shadow: 0 6px 0 rgba(0,0,0,0.25);
     }
-    .char:active { transform: translateY(3px); box-shadow: 0 4px 0 rgba(0,0,0,0.25); }
+    .char:active { transform: translateY(2px); box-shadow: 0 3px 0 rgba(0,0,0,0.25); }
     .char.selected {
       border-color: #38bdf8;
-      box-shadow: 0 0 0 3px rgba(56,189,248,0.25), 0 8px 0 rgba(0,0,0,0.25);
+      box-shadow: 0 0 0 3px rgba(56,189,248,0.25), 0 6px 0 rgba(0,0,0,0.25);
     }
-    .char .emoji { font-size: 2.4rem; line-height: 1; margin-bottom: 6px; }
-    .char .cname { font-weight: 700; font-size: 0.95rem; }
-    .char .ctype { color: var(--muted); font-size: 0.75rem; font-weight: 600; margin-top: 2px; }
+    .char.selected-p2 {
+      border-color: #f472b6;
+      box-shadow: 0 0 0 3px rgba(244,114,182,0.28), 0 6px 0 rgba(0,0,0,0.25);
+    }
+    .char .emoji { font-size: 2rem; line-height: 1; margin-bottom: 4px; }
+    .char .cname { font-weight: 700; font-size: 0.85rem; }
+    .char .ctype { color: var(--muted); font-size: 0.68rem; font-weight: 600; margin-top: 2px; }
+    .char .hp-mini { font-size: 0.65rem; color: #86efac; font-weight: 700; margin-top: 3px; }
+
+    .poke-card {
+      display: none;
+      margin: 0 auto 14px;
+      width: min(100%, 420px);
+      border-radius: 18px;
+      border: 3px solid #fbbf24;
+      background:
+        linear-gradient(160deg, rgba(30,41,59,0.98), rgba(15,23,42,0.98));
+      box-shadow: 0 12px 28px rgba(0,0,0,0.35), inset 0 0 0 2px rgba(255,255,255,0.06);
+      padding: 12px 14px;
+      text-align: left;
+    }
+    .poke-card.show { display: block; }
+    .poke-card .pc-top {
+      display: flex; gap: 12px; align-items: center; margin-bottom: 8px;
+    }
+    .poke-card .pc-art {
+      width: 72px; height: 72px; border-radius: 16px;
+      display: grid; place-items: center; font-size: 2.4rem;
+      border: 2px solid rgba(255,255,255,0.2);
+      flex-shrink: 0;
+    }
+    .poke-card .pc-name { margin: 0; font-size: 1.25rem; font-weight: 700; color: #fff; }
+    .poke-card .pc-type {
+      display: inline-block; margin-top: 4px; padding: 2px 8px; border-radius: 999px;
+      font-size: 0.72rem; font-weight: 700; background: rgba(56,189,248,0.2); color: #7dd3fc;
+    }
+    .poke-card .pc-hp {
+      margin-left: auto; text-align: right; font-weight: 700; color: #4ade80; font-size: 1.1rem;
+    }
+    .poke-card .pc-hp small { display: block; color: var(--muted); font-size: 0.68rem; }
+    .pc-stats {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 8px 0;
+    }
+    .pc-stat {
+      background: rgba(0,0,0,0.28); border-radius: 10px; padding: 6px 4px; text-align: center;
+    }
+    .pc-stat b { display: block; font-size: 0.95rem; color: #fde68a; }
+    .pc-stat span { font-size: 0.65rem; color: var(--muted); font-weight: 600; }
+    .pc-ability, .pc-move {
+      background: rgba(15,23,42,0.75);
+      border: 1px solid rgba(148,163,184,0.2);
+      border-radius: 12px;
+      padding: 8px 10px;
+      margin-top: 6px;
+      font-size: 0.82rem;
+      line-height: 1.35;
+    }
+    .pc-ability strong, .pc-move strong { color: #fbbf24; }
+    .pc-move .dmg {
+      float: right; color: #f87171; font-weight: 700; font-size: 0.9rem;
+    }
+    .pc-flavor {
+      margin: 8px 0 0; color: var(--muted); font-size: 0.75rem; font-style: italic;
+    }
     .mode-row {
       display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 12px;
     }
@@ -345,7 +409,8 @@
               <button class="btn" data-mode="pvp">👥 2 Players</button>
             </div>
             <div class="chars" id="charGrid"></div>
-            <p class="sub" id="pickHint">Tap a fighter for Player 1</p>
+            <div class="poke-card" id="pokeCard"></div>
+            <p class="sub" id="pickHint">Tap a fighter for Player 1 — view their trainer card!</p>
             <div class="actions">
               <button class="btn primary" id="btnFight" disabled>Fight!</button>
             </div>
@@ -399,63 +464,229 @@
   (() => {
     "use strict";
 
-    // ——— Roster (fan game / tribute; original simplified moves) ———
+    // ——— Roster as mini Pokémon cards (fan game / tribute) ———
+    // cardAtk/cardDef/cardSpd = 1–5 stars shown on card; power/defense/speed drive combat
     const ROSTER = [
+      // Leo favorites
       {
         id: "pikachu", name: "Pikachu", emoji: "⚡", type: "Electric",
         color: "#facc15", accent: "#fde047", dark: "#ca8a04",
-        hp: 100, speed: 5.4, jump: 14.5, power: 0.95, reach: 58,
-        special: "Thunder Jolt", super: "Volt Crash",
-        specialDmg: 16, superDmg: 28, specialCost: 30, superCost: 100
+        hp: 100, speed: 5.5, jump: 14.5, power: 1.05, defense: 0.92, reach: 60,
+        cardAtk: 4, cardDef: 2, cardSpd: 5,
+        ability: "Static", abilityText: "Hits build super meter a little faster.",
+        meterGain: 1.2,
+        basic: "Quick Attack", basicDmg: 8,
+        special: "Thunderbolt", specialDmg: 18, specialCost: 28,
+        super: "Volt Tackle", superDmg: 32, superCost: 100,
+        flavor: "Stores electricity in its cheeks. Leo's spark buddy!"
       },
+      {
+        id: "psyduck", name: "Psyduck", emoji: "🦆", type: "Water",
+        color: "#fbbf24", accent: "#fde68a", dark: "#b45309",
+        hp: 108, speed: 3.9, jump: 12.8, power: 0.95, defense: 1.0, reach: 58,
+        cardAtk: 3, cardDef: 3, cardSpd: 2,
+        ability: "Cloud Nine", abilityText: "When HP is low, specials cost less.",
+        lowHpDiscount: true,
+        basic: "Scratch", basicDmg: 7,
+        special: "Confusion", specialDmg: 16, specialCost: 30,
+        super: "Psychic", superDmg: 30, superCost: 100,
+        flavor: "Always has a headache… until the psychic power kicks in!"
+      },
+      {
+        id: "scyther", name: "Scyther", emoji: "🗡️", type: "Bug/Flying",
+        color: "#4ade80", accent: "#bbf7d0", dark: "#166534",
+        hp: 102, speed: 5.6, jump: 15.0, power: 1.15, defense: 0.9, reach: 78,
+        cardAtk: 5, cardDef: 2, cardSpd: 5,
+        ability: "Technician", abilityText: "Kick attacks hit harder.",
+        kickBonus: 1.25,
+        basic: "Fury Cutter", basicDmg: 9,
+        special: "X-Scissor", specialDmg: 19, specialCost: 30,
+        super: "Aerial Ace", superDmg: 31, superCost: 100,
+        flavor: "Slashes so fast you barely see the blades. Leo-approved!"
+      },
+
+      // Starters / classics
       {
         id: "charizard", name: "Charizard", emoji: "🔥", type: "Fire/Flying",
         color: "#f97316", accent: "#fdba74", dark: "#c2410c",
-        hp: 115, speed: 4.2, jump: 13.2, power: 1.2, reach: 72,
-        special: "Flamethrower", super: "Blast Burn",
-        specialDmg: 18, superDmg: 32, specialCost: 32, superCost: 100
+        hp: 118, speed: 4.3, jump: 13.4, power: 1.22, defense: 0.95, reach: 72,
+        cardAtk: 5, cardDef: 3, cardSpd: 3,
+        ability: "Blaze", abilityText: "Power rises when HP is under 30%.",
+        lowHpPower: 1.2,
+        basic: "Ember", basicDmg: 8,
+        special: "Flamethrower", specialDmg: 19, specialCost: 32,
+        super: "Blast Burn", superDmg: 34, superCost: 100,
+        flavor: "Wings blaze as it soars into battle."
       },
       {
         id: "blastoise", name: "Blastoise", emoji: "💧", type: "Water",
         color: "#3b82f6", accent: "#93c5fd", dark: "#1d4ed8",
-        hp: 130, speed: 3.6, jump: 12.2, power: 1.1, reach: 68,
-        special: "Hydro Pump", super: "Hydro Cannon",
-        specialDmg: 17, superDmg: 30, specialCost: 34, superCost: 100
+        hp: 132, speed: 3.5, jump: 12.0, power: 1.12, defense: 1.25, reach: 70,
+        cardAtk: 4, cardDef: 5, cardSpd: 2,
+        ability: "Torrent", abilityText: "Takes less damage while blocking.",
+        blockBonus: 0.7,
+        basic: "Water Gun", basicDmg: 7,
+        special: "Hydro Pump", specialDmg: 18, specialCost: 34,
+        super: "Hydro Cannon", superDmg: 33, superCost: 100,
+        flavor: "Cannon shells fire torrents of water."
       },
       {
         id: "venusaur", name: "Venusaur", emoji: "🌿", type: "Grass/Poison",
         color: "#22c55e", accent: "#86efac", dark: "#15803d",
-        hp: 125, speed: 3.8, jump: 12.5, power: 1.05, reach: 70,
-        special: "Vine Whip", super: "Solar Beam",
-        specialDmg: 15, superDmg: 31, specialCost: 30, superCost: 100
+        hp: 128, speed: 3.7, jump: 12.4, power: 1.08, defense: 1.15, reach: 70,
+        cardAtk: 4, cardDef: 4, cardSpd: 2,
+        ability: "Overgrow", abilityText: "Slowly regenerates a tiny bit of HP.",
+        regen: 0.8,
+        basic: "Razor Leaf", basicDmg: 7,
+        special: "Vine Whip", specialDmg: 16, specialCost: 30,
+        super: "Solar Beam", superDmg: 32, superCost: 100,
+        flavor: "The flower on its back soaks up sunlight for power."
       },
       {
         id: "gengar", name: "Gengar", emoji: "👻", type: "Ghost/Poison",
         color: "#a855f7", accent: "#d8b4fe", dark: "#6b21a8",
-        hp: 95, speed: 5.1, jump: 14.8, power: 1.0, reach: 62,
-        special: "Shadow Ball", super: "Dream Eater",
-        specialDmg: 17, superDmg: 29, specialCost: 28, superCost: 100
+        hp: 96, speed: 5.2, jump: 14.8, power: 1.05, defense: 0.88, reach: 64,
+        cardAtk: 4, cardDef: 2, cardSpd: 4,
+        ability: "Levitate", abilityText: "Harder to hit while jumping.",
+        airDefense: 1.2,
+        basic: "Lick", basicDmg: 7,
+        special: "Shadow Ball", specialDmg: 18, specialCost: 28,
+        super: "Dream Eater", superDmg: 30, superCost: 100,
+        flavor: "Hides in shadows and sneaks up on foes."
       },
       {
         id: "lucario", name: "Lucario", emoji: "🔵", type: "Fighting/Steel",
         color: "#38bdf8", accent: "#7dd3fc", dark: "#0369a1",
-        hp: 110, speed: 4.8, jump: 14.0, power: 1.15, reach: 74,
-        special: "Aura Sphere", super: "Close Combat",
-        specialDmg: 18, superDmg: 33, specialCost: 32, superCost: 100
+        hp: 112, speed: 4.9, jump: 14.0, power: 1.18, defense: 1.05, reach: 76,
+        cardAtk: 5, cardDef: 3, cardSpd: 4,
+        ability: "Inner Focus", abilityText: "Hitstun ends a little sooner.",
+        stunResist: 0.85,
+        basic: "Force Palm", basicDmg: 8,
+        special: "Aura Sphere", specialDmg: 19, specialCost: 32,
+        super: "Close Combat", superDmg: 34, superCost: 100,
+        flavor: "Reads auras and fights with focused power."
       },
       {
         id: "machamp", name: "Machamp", emoji: "💪", type: "Fighting",
         color: "#f472b6", accent: "#fbcfe8", dark: "#be185d",
-        hp: 120, speed: 3.9, jump: 12.8, power: 1.3, reach: 66,
-        special: "Dynamic Punch", super: "Cross Chop",
-        specialDmg: 19, superDmg: 34, specialCost: 35, superCost: 100
+        hp: 122, speed: 3.8, jump: 12.6, power: 1.32, defense: 1.08, reach: 66,
+        cardAtk: 5, cardDef: 4, cardSpd: 2,
+        ability: "Guts", abilityText: "Punch attacks hit harder.",
+        punchBonus: 1.2,
+        basic: "Karate Chop", basicDmg: 9,
+        special: "Dynamic Punch", specialDmg: 20, specialCost: 35,
+        super: "Cross Chop", superDmg: 35, superCost: 100,
+        flavor: "Four arms mean four times the punches!"
       },
+
+      // Fiona's Eevee family
       {
         id: "eevee", name: "Eevee", emoji: "🦊", type: "Normal",
         color: "#d6a36a", accent: "#f5d0a9", dark: "#92400e",
-        hp: 105, speed: 4.6, jump: 13.6, power: 1.0, reach: 56,
-        special: "Swift", super: "Last Resort",
-        specialDmg: 14, superDmg: 27, specialCost: 26, superCost: 100
+        hp: 105, speed: 4.6, jump: 13.6, power: 1.0, defense: 1.0, reach: 56,
+        cardAtk: 3, cardDef: 3, cardSpd: 3,
+        ability: "Adaptability", abilityText: "Balanced all-rounder — meter builds steadily.",
+        meterGain: 1.1,
+        basic: "Tackle", basicDmg: 7,
+        special: "Swift", specialDmg: 15, specialCost: 26,
+        super: "Last Resort", superDmg: 28, superCost: 100,
+        flavor: "Can evolve into many forms. Fiona's favorite family!"
+      },
+      {
+        id: "vaporeon", name: "Vaporeon", emoji: "🌊", type: "Water",
+        color: "#38bdf8", accent: "#bae6fd", dark: "#0369a1",
+        hp: 124, speed: 4.0, jump: 12.8, power: 1.1, defense: 1.12, reach: 66,
+        cardAtk: 4, cardDef: 4, cardSpd: 3,
+        ability: "Water Absorb", abilityText: "Blocking restores a little super meter.",
+        blockMeter: true,
+        basic: "Water Pulse", basicDmg: 8,
+        special: "Aurora Beam", specialDmg: 17, specialCost: 30,
+        super: "Hydro Pump", superDmg: 32, superCost: 100,
+        flavor: "Cell structure like water — slips through attacks."
+      },
+      {
+        id: "jolteon", name: "Jolteon", emoji: "⚡", type: "Electric",
+        color: "#fde047", accent: "#fef9c3", dark: "#a16207",
+        hp: 98, speed: 5.8, jump: 15.2, power: 1.08, defense: 0.88, reach: 62,
+        cardAtk: 4, cardDef: 2, cardSpd: 5,
+        ability: "Volt Absorb", abilityText: "Extra speed while super meter is full.",
+        fullMeterSpeed: 1.15,
+        basic: "Thunder Shock", basicDmg: 8,
+        special: "Thunderbolt", specialDmg: 18, specialCost: 28,
+        super: "Thunder", superDmg: 33, superCost: 100,
+        flavor: "Needle-like fur charges with electricity."
+      },
+      {
+        id: "flareon", name: "Flareon", emoji: "🔥", type: "Fire",
+        color: "#ef4444", accent: "#fca5a5", dark: "#991b1b",
+        hp: 110, speed: 4.1, jump: 13.0, power: 1.28, defense: 0.95, reach: 60,
+        cardAtk: 5, cardDef: 3, cardSpd: 3,
+        ability: "Flash Fire", abilityText: "Specials hit harder.",
+        specialBonus: 1.15,
+        basic: "Ember", basicDmg: 8,
+        special: "Fire Spin", specialDmg: 18, specialCost: 30,
+        super: "Flare Blitz", superDmg: 35, superCost: 100,
+        flavor: "Fluffy coat stores body heat like a furnace."
+      },
+      {
+        id: "espeon", name: "Espeon", emoji: "💜", type: "Psychic",
+        color: "#c084fc", accent: "#e9d5ff", dark: "#6b21a8",
+        hp: 104, speed: 5.0, jump: 14.2, power: 1.12, defense: 0.95, reach: 68,
+        cardAtk: 4, cardDef: 3, cardSpd: 4,
+        ability: "Magic Bounce", abilityText: "Blocking reflects a tiny bit of chip damage.",
+        reflectChip: true,
+        basic: "Confusion", basicDmg: 8,
+        special: "Psybeam", specialDmg: 18, specialCost: 30,
+        super: "Psychic", superDmg: 33, superCost: 100,
+        flavor: "The orb on its head glows when it reads the future."
+      },
+      {
+        id: "umbreon", name: "Umbreon", emoji: "🌑", type: "Dark",
+        color: "#1e293b", accent: "#fde047", dark: "#020617",
+        hp: 118, speed: 4.0, jump: 13.0, power: 1.0, defense: 1.22, reach: 58,
+        cardAtk: 3, cardDef: 5, cardSpd: 3,
+        ability: "Synchronize", abilityText: "When hit, steals a bit of the foe's super meter.",
+        meterSteal: true,
+        basic: "Feint Attack", basicDmg: 7,
+        special: "Snarl", specialDmg: 15, specialCost: 28,
+        super: "Foul Play", superDmg: 30, superCost: 100,
+        flavor: "Rings glow under the moon. Tough and tricky!"
+      },
+      {
+        id: "leafeon", name: "Leafeon", emoji: "🍃", type: "Grass",
+        color: "#84cc16", accent: "#d9f99d", dark: "#3f6212",
+        hp: 112, speed: 4.7, jump: 13.8, power: 1.1, defense: 1.15, reach: 70,
+        cardAtk: 4, cardDef: 4, cardSpd: 4,
+        ability: "Chlorophyll", abilityText: "Recovers a little HP over time.",
+        regen: 1.1,
+        basic: "Razor Leaf", basicDmg: 8,
+        special: "Leaf Blade", specialDmg: 18, specialCost: 30,
+        super: "Leaf Storm", superDmg: 32, superCost: 100,
+        flavor: "Fresh as a forest breeze. Fiona loves Leafeon!"
+      },
+      {
+        id: "glaceon", name: "Glaceon", emoji: "❄️", type: "Ice",
+        color: "#67e8f9", accent: "#cffafe", dark: "#0e7490",
+        hp: 108, speed: 4.4, jump: 13.5, power: 1.14, defense: 1.08, reach: 64,
+        cardAtk: 4, cardDef: 4, cardSpd: 3,
+        ability: "Snow Cloak", abilityText: "Harder to hit while blocking.",
+        blockBonus: 0.75,
+        basic: "Ice Shard", basicDmg: 8,
+        special: "Ice Beam", specialDmg: 18, specialCost: 30,
+        super: "Blizzard", superDmg: 33, superCost: 100,
+        flavor: "Freezes the air into diamond dust."
+      },
+      {
+        id: "sylveon", name: "Sylveon", emoji: "🎀", type: "Fairy",
+        color: "#f9a8d4", accent: "#fce7f3", dark: "#be185d",
+        hp: 114, speed: 4.5, jump: 13.7, power: 1.08, defense: 1.1, reach: 66,
+        cardAtk: 4, cardDef: 4, cardSpd: 3,
+        ability: "Pixilate", abilityText: "Landing hits heals a tiny amount of HP.",
+        lifesteal: 0.08,
+        basic: "Fairy Wind", basicDmg: 7,
+        special: "Draining Kiss", specialDmg: 16, specialCost: 28,
+        super: "Moonblast", superDmg: 32, superCost: 100,
+        flavor: "Ribbon feelers wrap foes in calming energy."
       }
     ];
 
@@ -551,7 +782,10 @@
           else if (type === "Fire" || type.includes("Fire")) { tone(160, 0.2, "sawtooth", 0.2, 120); noise(0.18, 0.22, 0, 700); }
           else if (type === "Water") { tone(300, 0.15, "sine", 0.22, -80); tone(220, 0.18, "triangle", 0.15, -40, 0.05); noise(0.12, 0.12, 0, 900); }
           else if (type.includes("Grass")) { tone(440, 0.1, "triangle", 0.2, 80); tone(550, 0.12, "sine", 0.15, 0, 0.06); }
-          else if (type.includes("Ghost")) { tone(220, 0.2, "sine", 0.2, -100); tone(180, 0.25, "triangle", 0.12, -40, 0.05); }
+          else if (type.includes("Ghost") || type.includes("Dark")) { tone(220, 0.2, "sine", 0.2, -100); tone(180, 0.25, "triangle", 0.12, -40, 0.05); }
+          else if (type.includes("Psychic") || type.includes("Fairy")) { [523, 659, 880].forEach((f, i) => tone(f, 0.09, "sine", 0.16, 0, i * 0.05)); }
+          else if (type.includes("Bug")) { tone(500, 0.08, "square", 0.18, -60); noise(0.1, 0.16, 0, 1800); }
+          else if (type.includes("Ice")) { tone(880, 0.08, "triangle", 0.18, 200); tone(1200, 0.1, "sine", 0.12, 0, 0.05); noise(0.08, 0.1, 0, 3000); }
           else { tone(360, 0.12, "square", 0.2, 100); noise(0.1, 0.15, 0, 1000); }
         },
         super() {
@@ -669,16 +903,20 @@
         setState(f, "kick", 0);
         SFX.kick();
       } else if (kind === "special") {
-        if (f.superMeter < f.def.specialCost) { SFX.whoosh(); return; }
-        f.superMeter -= f.def.specialCost;
+        let cost = f.def.specialCost;
+        if (f.def.lowHpDiscount && f.hp / f.maxHp < 0.35) cost = Math.floor(cost * 0.7);
+        if (f.superMeter < cost) { SFX.whoosh(); return; }
+        f.superMeter -= cost;
         setState(f, "special", 0);
         SFX.special(f.def.type);
+        showToast(`${f.def.name}: ${f.def.special}!`, 700);
       } else if (kind === "super") {
         if (f.superMeter < f.def.superCost) { SFX.whoosh(); return; }
         f.superMeter = 0;
         setState(f, "super", 0);
         SFX.super();
         cameraShake = 10;
+        showToast(`${f.def.name}: ${f.def.super}!`, 900);
       }
     }
 
@@ -691,11 +929,23 @@
       SFX.jump();
     }
 
+    function effectivePower(f) {
+      let p = f.def.power || 1;
+      if (f.def.lowHpPower && f.hp / f.maxHp < 0.3) p *= f.def.lowHpPower;
+      return p;
+    }
+
+    function effectiveSpeed(f) {
+      let s = f.def.speed;
+      if (f.def.fullMeterSpeed && f.superMeter >= 100) s *= f.def.fullMeterSpeed;
+      return s;
+    }
+
     function moveFighter(f, dir) {
       if (f.hp <= 0) return;
       if (["hit", "ko", "super"].includes(f.state)) return;
       if (["punch", "kick", "special"].includes(f.state) && f.stateT < 0.18) return;
-      const speed = f.def.speed * (f.blocking ? 0.35 : 1) * (f.onGround ? 1 : 0.85);
+      const speed = effectiveSpeed(f) * (f.blocking ? 0.35 : 1) * (f.onGround ? 1 : 0.85);
       f.vx = dir * speed * 0.01;
       if (dir !== 0 && f.onGround && f.state === "idle") setState(f, "walk", 0);
       if (dir !== 0) f.face = dir > 0 ? 1 : -1;
@@ -712,19 +962,28 @@
       let knock = 0;
       let hitstun = 0.28;
       let kind = "normal";
+      const pow = effectivePower(f);
+      const basic = f.def.basicDmg || 7;
 
       if (f.state === "punch" && f.stateT > 0.06 && f.stateT < 0.16) {
-        active = true; dmg = 7 * f.def.power; knock = 4; hitstun = 0.22;
+        active = true;
+        dmg = basic * pow * (f.def.punchBonus || 1);
+        knock = 4; hitstun = 0.22; kind = "punch";
       } else if (f.state === "kick" && f.stateT > 0.08 && f.stateT < 0.2) {
-        active = true; dmg = 10 * f.def.power; knock = 6; hitstun = 0.28;
+        active = true;
+        dmg = (basic + 3) * pow * (f.def.kickBonus || 1);
+        knock = 6; hitstun = 0.28; kind = "kick";
       } else if (f.state === "special" && f.stateT > 0.1 && f.stateT < 0.28) {
-        active = true; dmg = f.def.specialDmg * f.def.power; knock = 8; hitstun = 0.35; kind = "special";
+        active = true;
+        dmg = f.def.specialDmg * pow * (f.def.specialBonus || 1);
+        knock = 8; hitstun = 0.35; kind = "special";
       } else if (f.state === "super" && f.stateT > 0.12 && f.stateT < 0.4) {
-        active = true; dmg = f.def.superDmg * f.def.power; knock = 12; hitstun = 0.5; kind = "super";
+        active = true;
+        dmg = f.def.superDmg * pow;
+        knock = 12; hitstun = 0.5; kind = "super";
       }
 
       if (!active) return null;
-      const x = f.face > 0 ? gx + 20 : gx - 20 - reach;
       const y = gy - 70;
       const hh = f.state === "kick" ? 50 : 60;
       const rw = f.state === "special" || f.state === "super" ? reach + 30 : reach;
@@ -751,18 +1010,26 @@
       if (defender.invuln > 0 || defender.state === "ko") return;
       if (attacker.attackHit && box.kind !== "super") return;
 
-      const blocking = defender.blocking && defender.onGround &&
-        Math.sign(defender.face) !== Math.sign(attacker.x - defender.x ? (attacker.x > defender.x ? 1 : -1) : defender.face);
-      // face toward attacker to block
       const facingAttacker = (attacker.x > defender.x && defender.face > 0) || (attacker.x < defender.x && defender.face < 0);
       const isBlock = defender.blocking && defender.onGround && facingAttacker;
 
+      // Defense & ability modifiers
+      let defMul = 1 / (defender.def.defense || 1);
+      if (!defender.onGround && defender.def.airDefense) defMul /= defender.def.airDefense;
+
       if (isBlock) {
-        const chip = Math.max(1, box.dmg * 0.15);
+        let chipMul = 0.15;
+        if (defender.def.blockBonus) chipMul *= defender.def.blockBonus;
+        let chip = Math.max(1, box.dmg * chipMul * defMul);
         defender.hp = Math.max(0, defender.hp - chip);
         defender.vx = attacker.face * 0.004;
-        defender.superMeter = Math.min(100, defender.superMeter + 4);
+        let blockMeter = 4;
+        if (defender.def.blockMeter) blockMeter += 6;
+        defender.superMeter = Math.min(100, defender.superMeter + blockMeter);
         attacker.superMeter = Math.min(100, attacker.superMeter + 3);
+        if (defender.def.reflectChip) {
+          attacker.hp = Math.max(1, attacker.hp - Math.max(1, chip * 0.35));
+        }
         attacker.attackHit = true;
         SFX.block();
         spawnFX(defender.x, 0.35, "block");
@@ -770,17 +1037,30 @@
       }
 
       attacker.attackHit = true;
-      const dmg = box.dmg;
+      let dmg = box.dmg * defMul;
       defender.hp = Math.max(0, defender.hp - dmg);
+      if (attacker.def.lifesteal) {
+        attacker.hp = Math.min(attacker.maxHp, attacker.hp + dmg * attacker.def.lifesteal);
+      }
       defender.vx = attacker.face * (box.knock * 0.0025);
       if (!defender.onGround) defender.vy = -3;
       setState(defender, "hit", 0);
-      defender.invuln = box.hitstun * 0.5;
+      const stunScale = defender.def.stunResist || 1;
+      defender.invuln = box.hitstun * 0.5 * stunScale;
       defender.stateT = 0;
       defender.flash = 0.15;
       defender.face = attacker.x > defender.x ? 1 : -1;
-      attacker.superMeter = Math.min(100, attacker.superMeter + (box.kind === "super" ? 0 : 12));
+
+      const meterMul = attacker.def.meterGain || 1;
+      const gain = (box.kind === "super" ? 0 : 12) * meterMul;
+      attacker.superMeter = Math.min(100, attacker.superMeter + gain);
       defender.superMeter = Math.min(100, defender.superMeter + 8);
+      if (defender.def.meterSteal) {
+        const steal = Math.min(8, attacker.superMeter);
+        attacker.superMeter = Math.max(0, attacker.superMeter - steal);
+        defender.superMeter = Math.min(100, defender.superMeter + steal);
+      }
+
       cameraShake = box.kind === "super" ? 14 : box.kind === "special" ? 8 : 5;
       SFX.hit();
       spawnFX(defender.x, 0.4, box.kind === "super" ? "super" : "hit");
@@ -868,9 +1148,10 @@
       document.getElementById("selectPane").hidden = false;
       document.getElementById("endPane").hidden = true;
       document.getElementById("overlayTitle").textContent = "Poké Tekken";
-      document.getElementById("overlaySub").textContent = "Pick your Pokémon fighter! Big buttons work great on tablets.";
+      document.getElementById("overlaySub").textContent = "Pick a fighter and read their trainer card — moves, ability, and stats!";
       pickStep = 1;
-      pickHint.textContent = "Tap a fighter for Player 1";
+      pickHint.textContent = "Tap a fighter for Player 1 — view their trainer card!";
+      showPokeCard(null);
       renderChars();
     }
 
@@ -981,17 +1262,20 @@
       // bounds & separation
       f.x = Math.max(0.08, Math.min(0.92, f.x));
 
+      // passive regen (Chlorophyll / Overgrow)
+      if (f.def.regen && f.hp > 0 && f.hp < f.maxHp && f.state !== "ko") {
+        f.hp = Math.min(f.maxHp, f.hp + f.def.regen * dt);
+      }
+
       // state recovery
+      let hitDur = 0.32 * (f.def.stunResist || 1);
       const dur = {
-        punch: 0.28, kick: 0.36, special: 0.45, super: 0.65, hit: 0.32, walk: 0.2
+        punch: 0.28, kick: 0.36, special: 0.45, super: 0.65, hit: hitDur, walk: 0.2
       };
       if (dur[f.state] && f.stateT >= dur[f.state]) {
         if (f.state !== "ko") setState(f, f.onGround ? "idle" : "jump", 0);
       }
       if (f.state === "walk" && Math.abs(f.vx) < 0.0005) setState(f, "idle", 0);
-      if (f.blocking && f.onGround && !["hit", "ko", "punch", "kick", "special", "super"].includes(f.state)) {
-        // stay block visual
-      }
     }
 
     function separate() {
@@ -1398,22 +1682,57 @@
     }
 
     // ——— Character select UI ———
+    function stars(n) {
+      return "★".repeat(n) + "☆".repeat(Math.max(0, 5 - n));
+    }
+
+    function showPokeCard(c) {
+      const card = document.getElementById("pokeCard");
+      if (!c) {
+        card.classList.remove("show");
+        card.innerHTML = "";
+        return;
+      }
+      card.classList.add("show");
+      card.innerHTML = `
+        <div class="pc-top">
+          <div class="pc-art" style="background:linear-gradient(145deg,${c.accent},${c.color})">${c.emoji}</div>
+          <div style="min-width:0;flex:1">
+            <h3 class="pc-name">${c.name}</h3>
+            <span class="pc-type">${c.type}</span>
+          </div>
+          <div class="pc-hp">${c.hp}<small>HP</small></div>
+        </div>
+        <div class="pc-stats">
+          <div class="pc-stat"><b>${stars(c.cardAtk)}</b><span>ATK</span></div>
+          <div class="pc-stat"><b>${stars(c.cardDef)}</b><span>DEF</span></div>
+          <div class="pc-stat"><b>${stars(c.cardSpd)}</b><span>SPD</span></div>
+          <div class="pc-stat"><b>${c.specialCost}</b><span>SPC</span></div>
+        </div>
+        <div class="pc-ability"><strong>Ability — ${c.ability}:</strong> ${c.abilityText}</div>
+        <div class="pc-move"><span class="dmg">${c.basicDmg}</span><strong>${c.basic}</strong> · Basic attack</div>
+        <div class="pc-move"><span class="dmg">${c.specialDmg}</span><strong>${c.special}</strong> · Special (meter ${c.specialCost})</div>
+        <div class="pc-move"><span class="dmg">${c.superDmg}</span><strong>${c.super}</strong> · Super (full meter)</div>
+        <p class="pc-flavor">“${c.flavor}”</p>
+      `;
+    }
+
     function renderChars() {
       charGrid.innerHTML = "";
       ROSTER.forEach(c => {
         const el = document.createElement("button");
         el.type = "button";
         el.className = "char";
-        el.innerHTML = `<div class="emoji">${c.emoji}</div><div class="cname">${c.name}</div><div class="ctype">${c.type}</div>`;
+        el.innerHTML = `<div class="emoji">${c.emoji}</div><div class="cname">${c.name}</div><div class="ctype">${c.type}</div><div class="hp-mini">HP ${c.hp}</div>`;
         if (pickP1 && pickP1.id === c.id) el.classList.add("selected");
-        if (pickP2 && pickP2.id === c.id && mode === "pvp") el.style.outline = "3px solid #f472b6";
+        if (pickP2 && pickP2.id === c.id) el.classList.add("selected-p2");
         el.addEventListener("click", () => {
           SFX.unlock();
           SFX.select();
+          showPokeCard(c);
           if (pickStep === 1) {
             pickP1 = c;
             if (mode === "cpu") {
-              // auto pick different CPU
               const others = ROSTER.filter(x => x.id !== c.id);
               pickP2 = others[Math.floor(Math.random() * others.length)];
               pickHint.textContent = `P1: ${pickP1.name}  ·  CPU: ${pickP2.name}`;
@@ -1432,6 +1751,8 @@
         });
         charGrid.appendChild(el);
       });
+      const focus = pickStep === 2 && pickP2 ? pickP2 : pickP1;
+      showPokeCard(focus);
     }
 
     // mode buttons
@@ -1445,7 +1766,8 @@
         pickP1 = null;
         pickP2 = null;
         btnFight.disabled = true;
-        pickHint.textContent = "Tap a fighter for Player 1";
+        pickHint.textContent = "Tap a fighter for Player 1 — view their trainer card!";
+        showPokeCard(null);
         renderChars();
       });
     });

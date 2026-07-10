@@ -8,52 +8,63 @@ A colorful, **tablet-friendly** Tekken-style fighting game — with Pokémon fig
 
 ## About
 
-Poké Tekken is a fan-made browser fighter built as a single HTML page. Pick a Pokémon, battle best-of-3 rounds, fill your super meter, and unleash specials. Big on-screen buttons and swipe controls make it easy to play on phones and tablets.
+Poké Tekken is a fan-made browser fighter built as a single HTML page. Each Pokémon has a **trainer card** with HP, ATK/DEF/SPD stars, an Ability, and named moves (basic, special, super) — just like a Pokémon card.
 
-This is an unofficial fan project for fun — not affiliated with Nintendo, Game Freak, Creatures, Bandai Namco, or The Pokémon Company.
+Made for fun with fighters Fiona and Leo love: the full **Eevee evolution family**, plus **Pikachu**, **Psyduck**, and **Scyther**.
+
+This is an unofficial fan project — not affiliated with Nintendo, Game Freak, Creatures, Bandai Namco, or The Pokémon Company.
+
+## Roster (18 fighters)
+
+| Trainer pick | Pokémon | Type | Signature moves |
+|--------------|---------|------|-----------------|
+| Leo | Pikachu | Electric | Thunderbolt / Volt Tackle |
+| Leo | Psyduck | Water | Confusion / Psychic |
+| Leo | Scyther | Bug/Flying | X-Scissor / Aerial Ace |
+| Fiona | Eevee | Normal | Swift / Last Resort |
+| Fiona | Vaporeon | Water | Aurora Beam / Hydro Pump |
+| Fiona | Jolteon | Electric | Thunderbolt / Thunder |
+| Fiona | Flareon | Fire | Fire Spin / Flare Blitz |
+| Fiona | Espeon | Psychic | Psybeam / Psychic |
+| Fiona | Umbreon | Dark | Snarl / Foul Play |
+| Fiona | Leafeon | Grass | Leaf Blade / Leaf Storm |
+| Fiona | Glaceon | Ice | Ice Beam / Blizzard |
+| Fiona | Sylveon | Fairy | Draining Kiss / Moonblast |
+| Classic | Charizard, Blastoise, Venusaur, Gengar, Lucario, Machamp | various | card specials + supers |
+
+Every fighter has a unique **Ability** that changes how they play (regen, meter steal, kick bonus, and more).
 
 ## Features
 
-- 8 playable fighters (Pikachu, Charizard, Blastoise, Venusaur, Gengar, Lucario, Machamp, Eevee)
-- Punch, kick, special, super, block, and jump
-- Health bars, super meter, rounds, and timer
+- Trainer-card stats and move list on character select
+- Punch, kick, special, super, block, jump
+- Health bars, super meter, best-of-3 rounds
 - vs CPU or local 2-player
-- Built-in sound effects and light music (Web Audio)
+- Built-in sound effects and light music
 - Large touch controls for tablets
 
 ## How to play
 
-1. Open the live link above (or open `index.html` locally).
+1. Open the live link (or `index.html` locally).
 2. Choose **vs CPU** or **2 Players**.
-3. Pick your fighter(s) and tap **Fight!**
-4. Use the big buttons (or keyboard) to battle.
+3. Tap a fighter to read their card, then **Fight!**
+4. Fill the orange meter with hits, then use **Special** / **Super**.
 
-| Action | Touch | Player 1 keys | Player 2 keys |
-|--------|-------|---------------|---------------|
-| Move | ◀ ▶ buttons / swipe | A D | ← → |
+| Action | Touch | Player 1 | Player 2 |
+|--------|-------|----------|----------|
+| Move | ◀ ▶ / swipe | A D | ← → |
 | Jump | ▲ / swipe up | W | ↑ |
-| Punch | 👊 | F | K |
-| Kick | 🦵 | G | L |
-| Special | ✨ | R | O |
-| Super | 💥 | T | P |
+| Punch / Kick | 👊 🦵 | F G | K L |
+| Special / Super | ✨ 💥 | R T | O P |
 | Block | 🛡 | S | ↓ |
-
-Land hits to fill the orange super bar, then fire **Special** or **Super** moves.
 
 ## Run locally
 
 ```bash
 git clone https://github.com/luvbuniz/poke-tek.git
 cd poke-tek
-# open index.html in a browser
+# open index.html
 ```
-
-## Tech
-
-- Pure HTML, CSS, and JavaScript (no build step)
-- Canvas arena rendering
-- Web Audio API for SFX and music
-- Responsive layout for phones, tablets, and desktops
 
 ## License
 
